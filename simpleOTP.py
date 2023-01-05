@@ -2,7 +2,7 @@ import random
 import re
 import smtplib
 sender_email = "aditya.mote10@gmail.com"
-sender_password = "prdf uhaz hcrw pypp"
+sender_password = "password"
 reciever_email = str(input("Enter E-mail ID to recieve OTP "))
 otp = ''
 for i in range(5):
