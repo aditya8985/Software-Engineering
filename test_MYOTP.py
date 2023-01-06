@@ -1,5 +1,5 @@
 import unittest
-import MYOTP
+import def_otp
 
 class TestStringMethods(unittest.TestCase):
 
