@@ -9,7 +9,7 @@ class otpSharing:
             self.server.ehlo()
             self.server.starttls()
             self.senderEmail = 'aditya.mote10@gmail.com'
-            self.senderPass = 'prdf uhaz hcrw pypp'
+            self.senderPass = 'password'
             self.server.login(self.senderEmail, self.senderPass)
         except:
             print("Unable to connect to the SMTP server")
