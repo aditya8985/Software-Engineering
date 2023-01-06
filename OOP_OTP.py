@@ -1,41 +1,62 @@
-import random
-import smtplib
-import re
+import random # Random library to generate OTP
+import re #Using regular expression library to check if email is in valid format
+import smtplib #to send e-mail
 
-sender_email=input('Enter your Email: \n')
-sender_email_password=input('Enter your Password: \n')
-reciever_email=input('Enter your Recivers email: \n')
-regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
+class otpSharing:
+    def __init__(self):
+        try:
+            self.server = smtplib.SMTP('smtp.gmail.com', 587)  # connecting to SMTP server at port 587
+            self.server.ehlo()
+            self.server.starttls()
+            self.senderEmail = 'aditya.mote10@gmail.com'
+            self.senderPass = 'prdf uhaz hcrw pypp'
+            self.server.login(self.senderEmail, self.senderPass)
+        except:
+            print("Unable to connect to the SMTP server")
+            exit()
 
-def validate_email(reciever_email):
-    if (re.fullmatch(regex,reciever_email)):
-        generate_otp()
-        return True
-    else:
-        return  False
+        self.otp = None
+        for i in range(3):  # Stop the program if user enters a invalid email several times
+            self.eMail = input("Enter email id: ")
+            if self.isEmail(self.eMail):
+                break
+            else:
+                print("Invalid email id!!!")
+        else:
+            print("You've entered an invalid email too many times!!! \n Try again later...")
+            exit()
 
-def generate_otp():
-    otp = ''.join([str(random.randint(0, 9)) for i in range(4)])
-    send_mail(otp)
-    return otp
 
-def send_mail(otp):
-    try:
-        server = smtplib.SMTP('smtp.gmail.com', 587)
-        server.starttls()
-        server.login(sender_email, password = sender_email_password)
-        msg = 'Hello, Your OTP is '+ str(otp)
-        server.sendmail(sender_email, reciever_email, msg)
-        server.quit()
-        verify_otp(otp)
-        return True
-    except:
-        return False
+    def isEmail(self,email):
+        regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b' #setting email template: *@*.*
+        if re.fullmatch(regex,email): #checking if the entered email matches the template
+            return True
+        else:
+            return False
 
-def verify_otp(otp):
-    verifying_otp=str(input("Enter OTP recieved on email "))
-    if verifying_otp==otp:
-        print("Verified Succesfully")
-    else:
-        print("Wrong OTP")
-validate_email(reciever_email)
+    def generateOTP(self, n): #function to return a OTP of length n
+        otp=""
+        for i in range(n):
+            otp+=str(random.randint(0,9))
+        return(otp)
+
+    def verifyOTP(self): #Function to verify if entered OTP is correct
+        print("Verify your email id: ")
+        OTP = input("Enter the OTP: ")
+        if OTP==self.otp:
+            print("Email ID successfully verified...")
+        else:
+            print("Invalid OTP")
+    def sendEmail(self,n):
+        self.server.sendmail(self.senderEmail, self.eMail, "Subject:OTP\nYour OTP using OOP is " + self.otp)  # Sending the email
+        print("An {} digit OTP has been sent to {}".format(n, self.eMail))
+
+
+
+if __name__=='__main__':
+    obj=otpSharing()
+    n=int(input("Enter the OTP length: "))
+    obj.otp=obj.generateOTP(n)
+    obj.sendEmail(n)
+    obj.verifyOTP()
+    obj.server.close()
